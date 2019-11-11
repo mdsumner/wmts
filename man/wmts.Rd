@@ -4,15 +4,17 @@
 \alias{wmts}
 \title{OGC Webmap Tile Server (WMTS)}
 \usage{
-wmts(x, loc, buffer = NULL, ..., zoom = NULL, max_tiles = 25,
-  bands = 1:3)
+wmts(x, loc, buffer = NULL, silent = FALSE, ..., zoom = NULL,
+  max_tiles = 25, bands = 1:3)
 }
 \arguments{
 \item{x}{WMTS address}
 
 \item{loc}{something we can get an extent from}
 
-\item{buffer}{radius in metres (in the case 'loc' is a single point)}
+\item{buffer}{radius in metres (in the case 'loc' is a single point, and is longlat)}
+
+\item{silent}{suppress messages (default is \code{FALSE})}
 
 \item{...}{ignored}
 
@@ -28,24 +30,30 @@ raster brick
 \description{
 Get raster from WMTS
 }
+\details{
+Beware that if 'zoom' is set the 'max_tiles' argument is ignored. Use
+the function defaults to discover a reasonable zoom level, then re-run with a
+higher (more pixels) or lower (fewer pixels) zoom level.
+}
 \examples{
-centre <- c(-9004415, 3806965)
-radius <- 4000
+centre <- c(-80.888, 32.332)  ## lonlat
+radius <- 4000                ## metres
 u <- "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSTopo,tilematrixset=default028mm"
-x <- wmts(u, centre, radius)
-#ex <- raster::extent(centre[c(1, 1, 2, 2)] + c(-1, 1, -1, 1) * buffer)
-#rgb_map <- plot_get_wmts(l, ex, native = TRUE)
-#
-#library(ggplot2)
-#
-#tab <- tibble::as_tibble(as.data.frame(rgb_map, xy = TRUE))
+x <- wmts(u, centre, buffer = radius)
+#f <- system.file("gpkg/nc.gpkg", package = "sf", mustWork = TRUE)
+#sf <- sf::read_sf(f)
+#x <- wmts(u, sf)
+
+
+#tab <- tibble::as_tibble(raster::as.data.frame(x, xy = TRUE))
 #names(tab) <- c("x", "y", "red", "green", "blue")
 ##tab <- dplyr::filter(tab, !is.na(red))
 #
 ### ... when we have missing values, we should drop them or rgb() will error
 #tab$hex <- rgb(tab$red, tab$green, tab$blue, maxColorValue = 255)
+#library(ggplot2)
 #ggplot(tab, aes(x, y, fill = hex)) +
-#  geom_raster() +
-#  coord_equal() +
-#  scale_fill_identity()
+#   geom_raster() +
+#   coord_equal() +
+#   scale_fill_identity()
 }

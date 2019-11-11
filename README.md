@@ -18,8 +18,7 @@ NOT USEABLE yet, watch out
 
 ## TODO
 
-  - \[x\] need to deal with various inputs (how does ceramic do it,
-    missing something atm)
+  - \[x\] need to deal with various inputs
   - \[ \] add providers
 
 ## Example
@@ -30,6 +29,9 @@ centre <- c(-80.888, 32.332)  ## lonlat
 radius <- 4000                ## metres
 u <- "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSTopo,tilematrixset=default028mm"
 library(wmts)
+
+## note that input can be centre (longlat pt), buffer (km) or a spatial object (ignore buffer)
+## output is a raster in World Mercator
 x <- wmts(u, centre, buffer = radius)
 #> zoom: 14
 raster::plotRGB(x)

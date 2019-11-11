@@ -43,12 +43,12 @@ wmts <- function(x, loc, buffer = NULL, silent = FALSE, ..., zoom = NULL, max_ti
   my_bbox <- bbox_pair$tile_bbox
   bb_points <- bbox_pair$user_points
   ## all we need is zoom
+  if (!is.null(zoom))   max_tiles <- NULL
   tile_grid <- slippymath::bbox_to_tile_grid(my_bbox, max_tiles = max_tiles,
                                            zoom = zoom)
   zoom_level <- tile_grid$zoom
   if (!is.null(zoom)) {
     zoom_level <- zoom
-    max_tiles <- NULL
   }
   if (!silent) {
     writeLines(sprintf("zoom: %s", zoom_level))

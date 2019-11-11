@@ -33,7 +33,9 @@
 #' #  scale_fill_identity()
 wmts <- function(x, loc, buffer = NULL, ..., zoom = NULL, max_tiles = 25, bands = 1:3) {
   #pts <-  slippymath::merc_to_lonlat(matrix(centre, ncol = 2L))
-  bbox_pair <- spatial_bbox(x, buffer)
+  if (is.null(buffer) && is.numeric(loc)) buffer <- 5000
+  if (is.numeric(loc)) loc <- matrix(loc, byrow = TRUE, ncol = 2)
+  bbox_pair <- spatial_bbox(loc, buffer)
   my_bbox <- bbox_pair$tile_bbox
   bb_points <- bbox_pair$user_points
   ## all we need is zoom

@@ -1,3 +1,5 @@
 ^wmts\.Rproj$
 ^\.Rproj\.user$
 ^gdalwmscache$
+^README\.Rmd$
+^CODE_OF_CONDUCT\.md$

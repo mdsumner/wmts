@@ -9,6 +9,8 @@
 
 The goal of wmts is to …
 
+NOT USEABLE yet
+
 ## TODO
 
   - \[ \] need to deal with various inputs (how does ceramic do it,

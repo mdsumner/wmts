@@ -5,7 +5,7 @@
 \title{OGC Webmap Tile Server (WMTS)}
 \usage{
 wmts(x, loc, buffer = NULL, silent = FALSE, ..., zoom = NULL,
-  max_tiles = 25, bands = 1:3)
+  max_tiles = 9, bands = 1:3)
 }
 \arguments{
 \item{x}{WMTS address}
@@ -40,6 +40,7 @@ centre <- c(-80.888, 32.332)  ## lonlat
 radius <- 4000                ## metres
 u <- "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSTopo,tilematrixset=default028mm"
 x <- wmts(u, centre, buffer = radius)
+raster::plotRGB(x, interpolate = TRUE) ## use interpolate to match to device size
 #f <- system.file("gpkg/nc.gpkg", package = "sf", mustWork = TRUE)
 #sf <- sf::read_sf(f)
 #x <- wmts(u, sf)
@@ -53,7 +54,7 @@ x <- wmts(u, centre, buffer = radius)
 #tab$hex <- rgb(tab$red, tab$green, tab$blue, maxColorValue = 255)
 #library(ggplot2)
 #ggplot(tab, aes(x, y, fill = hex)) +
-#   geom_raster() +
+#   geom_raster(interpolate = TRUE) +
 #   coord_equal() +
 #   scale_fill_identity()
 }

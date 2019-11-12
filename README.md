@@ -32,9 +32,9 @@ library(wmts)
 
 ## note that input can be centre (longlat pt), buffer (km) or a spatial object (ignore buffer)
 ## output is a raster in World Mercator
-x <- wmts(u, centre, buffer = radius)
-#> zoom: 14
-raster::plotRGB(x)
+x <- wmts(u, centre, buffer = radius) ## zoom determined interactively, don't use a hardcoded zoom
+#> zoom: 13
+raster::plotRGB(x, interpolate = TRUE)
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />
@@ -49,7 +49,7 @@ names(tab) <- c("x", "y", "red", "green", "blue")
 tab$hex <- rgb(tab$red, tab$green, tab$blue, maxColorValue = 255)
 library(ggplot2)
 ggplot(tab, aes(x, y, fill = hex)) +
-  geom_raster() +
+  geom_raster(interpolate = TRUE) +
   coord_equal() +
   scale_fill_identity()
 ```

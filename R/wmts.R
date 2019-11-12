@@ -20,6 +20,7 @@
 #' radius <- 4000                ## metres
 #' u <- "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSTopo,tilematrixset=default028mm"
 #' x <- wmts(u, centre, buffer = radius)
+#' raster::plotRGB(x, interpolate = TRUE) ## use interpolate to match to device size
 #' #f <- system.file("gpkg/nc.gpkg", package = "sf", mustWork = TRUE)
 #' #sf <- sf::read_sf(f)
 #' #x <- wmts(u, sf)
@@ -33,10 +34,10 @@
 #' #tab$hex <- rgb(tab$red, tab$green, tab$blue, maxColorValue = 255)
 #' #library(ggplot2)
 #' #ggplot(tab, aes(x, y, fill = hex)) +
-#' #   geom_raster() +
+#' #   geom_raster(interpolate = TRUE) +
 #' #   coord_equal() +
 #' #   scale_fill_identity()
-wmts <- function(x, loc, buffer = NULL, silent = FALSE, ..., zoom = NULL, max_tiles = 25, bands = 1:3) {
+wmts <- function(x, loc, buffer = NULL, silent = FALSE, ..., zoom = NULL, max_tiles = 9, bands = 1:3) {
 
   if (is.numeric(loc)) loc <- matrix(loc, byrow = TRUE, ncol = 2)
   bbox_pair <- spatial_bbox(loc, buffer)
@@ -54,9 +55,10 @@ wmts <- function(x, loc, buffer = NULL, silent = FALSE, ..., zoom = NULL, max_ti
     writeLines(sprintf("zoom: %s", zoom_level))
   }
   uzoom <- paste0(x, sprintf(",zoom_level=%i", zoom_level))
-  br <- raster::subset(raster::brick(uzoom), bands)
   ex <- raster::extent(slippymath::lonlat_to_merc(as.matrix(expand.grid(x = my_bbox[c(1, 3)], y = my_bbox[c(2, 4)]))))
-  out <- try(raster::crop(br, ex, snap = "out"), silent = TRUE)  ## FIXME how to avoid raster creating a file?
+ br <- raster::subset(raster::brick(uzoom), bands)
+    out <- try(raster::crop(br, ex, snap = "out"), silent = TRUE)  ## FIXME how to avoid raster creating a file?
+
   if (inherits(out, "try-error")) {
     stop(sprintf("cannot read from WMTS url: %s", uzoom))  ## FIXME add longlat-bounds to message
   }

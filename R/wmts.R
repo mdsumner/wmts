@@ -28,6 +28,7 @@ gdalsource_handler <- function(x, sds = 1, ...) {
 #' Beware that if 'zoom' is set the 'max_tiles' argument is ignored. Use
 #' the function defaults to discover a reasonable zoom level, then re-run with a
 #' higher (more pixels) or lower (fewer pixels) zoom level.
+#'
 #' @param x WMTS address, either the raw 'WMTSCapabilities.xml' or an expanded GDAL 'WMTS:<url>[],options]' driver data source
 #' @param loc something we can get an extent from
 #' @param buffer radius in metres (in the case 'loc' is a single point, and is longlat)
@@ -35,15 +36,19 @@ gdalsource_handler <- function(x, sds = 1, ...) {
 #' @param ... ignored
 #' @param zoom override hueristic for zoom level (take care! no safety checks)
 #' @param max_tiles max number of tiles for zoom hueristic (default 25)
+#' @param sds which subdataset to read if there are multiple (defaults to 1)
 #' @param bands bands to get (default is 1,2,3 assuming RGB)
+#'
 #' @export
 #' @return raster brick
 #' @examples
 #' centre <- c(-80.888, 32.332)  ## lonlat
 #' radius <- 4000                ## metres
-#' u <- "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSTopo,tilematrixset=default028mm"
+#' u <- file.path("https://basemap.nationalmap.gov/arcgis/rest",
+#'                "services/USGSTopo/MapServer/WMTS/1.0.0/WMTSCapabilities.xml")
 #' x <- wmts(u, centre, buffer = radius)
-#' # x <- wmts("https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/WMTS/1.0.0/WMTSCapabilities.xml", centre, buffer = radius)
+#' # u1 <- sprintf("WMTS:%s,layer=USGSTopo,tilematrixset=default028mm", u)
+#' # x <- wmts(u1, centre, buffer = radius)
 #' # x <- wmts(u, cbind(0, 0), buffer = 20037508)
 #' raster::plotRGB(x, interpolate = TRUE) ## use interpolate to match to device size
 #' #f <- system.file("gpkg/nc.gpkg", package = "sf", mustWork = TRUE)
@@ -62,8 +67,8 @@ gdalsource_handler <- function(x, sds = 1, ...) {
 #' #   geom_raster(interpolate = TRUE) +
 #' #   coord_equal() +
 #' #   scale_fill_identity()
-wmts <- function(x, loc, buffer = NULL, silent = FALSE, ..., zoom = NULL, max_tiles = 9, bands = 1:3) {
-  x <- gdalsource_handler(x)
+wmts <- function(x, loc, buffer = NULL, silent = FALSE, ..., zoom = NULL, max_tiles = 9, bands = 1:3, sds = 1L) {
+  x <- gdalsource_handler(x, sds = sds)
   if (is.numeric(loc)) loc <- matrix(loc, byrow = TRUE, ncol = 2)
   bbox_pair <- spatial_bbox(loc, buffer)
   my_bbox <- bbox_pair$tile_bbox

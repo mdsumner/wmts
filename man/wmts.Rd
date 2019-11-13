@@ -5,10 +5,10 @@
 \title{OGC Webmap Tile Server (WMTS)}
 \usage{
 wmts(x, loc, buffer = NULL, silent = FALSE, ..., zoom = NULL,
-  max_tiles = 9, bands = 1:3)
+  max_tiles = 9, bands = 1:3, sds = 1L)
 }
 \arguments{
-\item{x}{WMTS address}
+\item{x}{WMTS address, either the raw 'WMTSCapabilities.xml' or an expanded GDAL 'WMTS:<url>[],options]' driver data source}
 
 \item{loc}{something we can get an extent from}
 
@@ -23,6 +23,8 @@ wmts(x, loc, buffer = NULL, silent = FALSE, ..., zoom = NULL,
 \item{max_tiles}{max number of tiles for zoom hueristic (default 25)}
 
 \item{bands}{bands to get (default is 1,2,3 assuming RGB)}
+
+\item{sds}{which subdataset to read if there are multiple (defaults to 1)}
 }
 \value{
 raster brick
@@ -38,8 +40,12 @@ higher (more pixels) or lower (fewer pixels) zoom level.
 \examples{
 centre <- c(-80.888, 32.332)  ## lonlat
 radius <- 4000                ## metres
-u <- "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSTopo,tilematrixset=default028mm"
+u <- file.path("https://basemap.nationalmap.gov/arcgis/rest",
+               "services/USGSTopo/MapServer/WMTS/1.0.0/WMTSCapabilities.xml")
 x <- wmts(u, centre, buffer = radius)
+# u1 <- sprintf("WMTS:\%s,layer=USGSTopo,tilematrixset=default028mm", u)
+# x <- wmts(u1, centre, buffer = radius)
+# x <- wmts(u, cbind(0, 0), buffer = 20037508)
 raster::plotRGB(x, interpolate = TRUE) ## use interpolate to match to device size
 #f <- system.file("gpkg/nc.gpkg", package = "sf", mustWork = TRUE)
 #sf <- sf::read_sf(f)

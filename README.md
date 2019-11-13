@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![Travis build
+status](https://travis-ci.org/mdsumner/wmts.svg?branch=master)](https://travis-ci.org/mdsumner/wmts)
 <!-- badges: end -->
 
 The goal of wmts is to …

@@ -14,6 +14,8 @@ RoxygenNote: 6.1.1
 Imports: 
     slippymath,
     raster,
-    spex
+    spex,
+    reproj,
+    vapour
 Suggests: 
-    testthat
+    testthat (>= 2.1.0)

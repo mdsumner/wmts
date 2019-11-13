@@ -1,6 +1,6 @@
 Package: wmts
 Title: Read imagery from WebMap Tile Servers
-Version: 0.0.1
+Version: 0.0.1.9001
 Authors@R: 
     c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")))
 Description: Read imagery rasters from 'WMTS' ('WebMap Tile Servers') by setting
@@ -15,3 +15,5 @@ Imports:
     slippymath,
     raster,
     spex
+Suggests: 
+    testthat

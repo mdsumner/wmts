@@ -19,6 +19,7 @@ NOT USEABLE yet, watch out
 ## TODO
 
   - \[x\] need to deal with various inputs
+  - \[x\] fix URL forms (http/s vs WMTS:)
   - \[ \] add providers
 
 ## Example

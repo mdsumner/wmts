@@ -9,9 +9,10 @@
 status](https://travis-ci.org/mdsumner/wmts.svg?branch=master)](https://travis-ci.org/mdsumner/wmts)
 <!-- badges: end -->
 
-The goal of wmts is to …
+The goal of wmts is to obtain imagery from WMTS image servers. See [GDAL
+for details on WMTS](https://gdal.org/drivers/raster/wmts.html).
 
-NOT USEABLE yet, watch out
+## Beware
 
   - will create temporary files (gdalwmscache, and raster temp)
   - no checks for in-bounds for tiles
@@ -59,7 +60,29 @@ ggplot(tab, aes(x, y, fill = hex)) +
 
 <img src="man/figures/README-example-2.png" width="100%" />
 
------
+## Tasmania\!
+
+Get a Tassie example.
+
+``` r
+ext <- raster::extent(146, 148, -43, -40.5)
+u <- "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Topographic/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_Topographic,tilematrixset=default028mm"
+
+img <- wmts(u, loc = ext)
+#> zoom: 8
+raster::plotRGB(img, interpolate = TRUE)
+```
+
+<img src="man/figures/README-tassie-1.png" width="100%" />
+
+``` r
+
+ortho <- wmts("https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Orthophoto/MapServer/WMTS/1.0.0/WMTSCapabilities.xml", raster::extent(147.125, 147.528, -43.054, -42.717), max_tiles = 16)
+#> zoom: 11
+raster::plotRGB(ortho, interpolate = TRUE)
+```
+
+## <img src="man/figures/README-tassie-2.png" width="100%" />
 
 Please note that the wmts project is released with a [Contributor Code
 of

@@ -14,8 +14,10 @@ provide *any URL* with a `GetCapabilities.xml` and quickly get an image
 for any region at any resolution.
 
 *Any URL*? Only Pseudo Mercator services tested so far, see examples
-below for success stories. Please [file an issue]() or ping me [on
-twitter](https://twitter.com/mdsumner)
+below for success stories. Please [file an
+issue](https://github.com/mdsumner/wmts/issues) or ping me [on
+twitter](https://twitter.com/mdsumner) if you have
+wants/needs/suggestions/bug-fixes/high-fives.
 
 ## The wmts() function
 

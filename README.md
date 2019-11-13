@@ -9,8 +9,31 @@
 status](https://travis-ci.org/mdsumner/wmts.svg?branch=master)](https://travis-ci.org/mdsumner/wmts)
 <!-- badges: end -->
 
-The goal of wmts is to obtain imagery from WMTS image servers. See [GDAL
-for details on WMTS](https://gdal.org/drivers/raster/wmts.html).
+The goal of wmts is to obtain imagery from online image servers. You can
+provide any URL with a `GetCapabilities.xml` and quickly get an image
+for any region at any resolution.
+
+*Any URL*? Only Pseudo Mercator services tested so far, see examples
+below for success stories.
+
+## The wmts() function
+
+Use `loc` to specify a location (`cbind(lon, lat)`) and `buffer` to give
+a radius around that point in metres. Alternatively, any spatial object
+can be used as `loc` and its extent (in the Mercator tile server
+projection) will be used.
+
+There is an argument `max_tiles` which is 9 by default (3x3 256x256
+tiles) and ensures a reasonably small sized result. Increase max\_tiles
+to obtain greater resolution (squares make sense, i.e. 16, 25, 36, 49, …
+but the actual shape depends on `loc` and `buffer`).
+
+The `zoom` argument can be used but please take care, the function will
+report the zoom in use and it’s advisable not to increase this much (use
+max\_tiles to get a known maximum amount of data).
+
+See [GDAL WMTS documentation](https://gdal.org/drivers/raster/wmts.html)
+for *technical details* on this GDAL-based approach.
 
 ## Beware
 
@@ -82,7 +105,39 @@ ortho <- wmts("https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps
 raster::plotRGB(ortho, interpolate = TRUE)
 ```
 
-## <img src="man/figures/README-tassie-2.png" width="100%" />
+<img src="man/figures/README-tassie-2.png" width="100%" />
+
+A list of Tasmanian servers is here:
+<https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps>
+
+## Earthdata
+
+You want the REST GetCapabilities(.xml), and we have to prefix with
+“WMTS:” *and include* the layer name
+(WIP).
+
+<https://wiki.earthdata.nasa.gov/display/GIBS/GIBS+API+for+Developers#GIBSAPIforDevelopers-ServiceEndpointsandGetCapabilities>
+
+``` r
+u <- "WMTS:https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/1.0.0/WMTSCapabilities.xml,layer=MODIS_Terra_L3_Land_Surface_Temp_Monthly_Day"
+im <- wmts(u, cbind(0, 0), 20037508, zoom = 0)
+#> zoom: 0
+library(raster)
+#> Loading required package: sp
+plotRGB(im, interpolate = TRUE)
+```
+
+<img src="man/figures/README-earthdata-1.png" width="100%" />
+
+``` r
+
+im2 <- wmts(u, extent(100, 180, -55, 15), max_tiles= 36)
+#> zoom: 4
+
+plotRGB(im2, interpolate = TRUE)
+```
+
+## <img src="man/figures/README-earthdata-2.png" width="100%" />
 
 Please note that the wmts project is released with a [Contributor Code
 of

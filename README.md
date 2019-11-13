@@ -161,7 +161,7 @@ raster::plotRGB(xx)
 street <- "https://services.thelist.tas.gov.au/arcgis/rest/services/Raster/TTSA/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
 st <- wmts(street, raster::shift(zlocal, 5000, 5000), max_tiles = 36)
 #> zoom: 16
-raster::plotRGB(st)
+raster::plotRGB(st, interpolate = TRUE)
 ```
 
 <img src="man/figures/README-tassie-7.png" width="100%" />

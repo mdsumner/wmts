@@ -22,9 +22,9 @@ knitr::opts_chunk$set(
 [![Travis build status](https://travis-ci.org/mdsumner/wmts.svg?branch=master)](https://travis-ci.org/mdsumner/wmts)
 <!-- badges: end -->
 
-The goal of wmts is to obtain imagery from online image servers. You can provide any URL with a `GetCapabilities.xml` and quickly get an image for any region at any resolution. 
+The goal of wmts is to obtain imagery from online image servers. You can provide *any URL* with a `GetCapabilities.xml` and quickly get an image for any region at any resolution. 
 
-*Any URL*? Only Pseudo Mercator services tested so far, see examples below for success stories. 
+*Any URL*? Only Pseudo Mercator services tested so far, see examples below for success stories.  Please [file an issue]() or ping me [on twitter](https://twitter.com/mdsumner)
 
 
 ## The wmts() function
@@ -93,6 +93,33 @@ raster::plotRGB(img, interpolate = TRUE)
 ortho <- wmts("https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Orthophoto/MapServer/WMTS/1.0.0/WMTSCapabilities.xml", raster::extent(147.125, 147.528, -43.054, -42.717), max_tiles = 16)
 raster::plotRGB(ortho, interpolate = TRUE)
 
+
+## note that we can use an spatial object for the extent, saving much pain
+url_shade <- "https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/HillshadeGrey/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+greyshade <- wmts(url_shade, ortho)
+raster::plotRGB(greyshade, interpolate = TRUE)
+
+prefix_shade <- "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/HillshadeGrey/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+shade <- wmts(prefix_shade, ortho)
+# same: raster::plotRGB(shade, interpolate = TRUE)
+
+prefix_shade <- "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+hillshade <- wmts(prefix_shade, ortho)
+raster::plotRGB(hillshade)
+
+zlocal <- raster::raster(raster::extent(c(16391003, 16394978, -5301061, -5298768)), crs = raster::projection(ortho))
+zz <- wmts(prefix_shade, zlocal)
+raster::plotRGB(zz)
+
+TasmapRaster <- "https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/TasmapRaster/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+xx <- wmts(TasmapRaster, zlocal, max_tiles = 16)
+raster::plotRGB(xx)
+
+
+street <- "https://services.thelist.tas.gov.au/arcgis/rest/services/Raster/TTSA/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+st <- wmts(street, raster::shift(zlocal, 5000, 5000), max_tiles = 36)
+raster::plotRGB(st)
+
 ```
 
 A list of Tasmanian servers is here: https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps
@@ -115,6 +142,7 @@ plotRGB(im, interpolate = TRUE)
 im2 <- wmts(u, extent(100, 180, -55, 15), max_tiles= 36)
 
 plotRGB(im2, interpolate = TRUE)
+
 
 ```
 --- 

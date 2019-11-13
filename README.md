@@ -10,11 +10,12 @@ status](https://travis-ci.org/mdsumner/wmts.svg?branch=master)](https://travis-c
 <!-- badges: end -->
 
 The goal of wmts is to obtain imagery from online image servers. You can
-provide any URL with a `GetCapabilities.xml` and quickly get an image
+provide *any URL* with a `GetCapabilities.xml` and quickly get an image
 for any region at any resolution.
 
 *Any URL*? Only Pseudo Mercator services tested so far, see examples
-below for success stories.
+below for success stories. Please [file an issue]() or ping me [on
+twitter](https://twitter.com/mdsumner)
 
 ## The wmts() function
 
@@ -106,6 +107,64 @@ raster::plotRGB(ortho, interpolate = TRUE)
 ```
 
 <img src="man/figures/README-tassie-2.png" width="100%" />
+
+``` r
+
+
+## note that we can use an spatial object for the extent, saving much pain
+url_shade <- "https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/HillshadeGrey/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+greyshade <- wmts(url_shade, ortho)
+#> zoom: 10
+raster::plotRGB(greyshade, interpolate = TRUE)
+```
+
+<img src="man/figures/README-tassie-3.png" width="100%" />
+
+``` r
+
+prefix_shade <- "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/HillshadeGrey/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+shade <- wmts(prefix_shade, ortho)
+#> zoom: 10
+# same: raster::plotRGB(shade, interpolate = TRUE)
+
+prefix_shade <- "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+hillshade <- wmts(prefix_shade, ortho)
+#> zoom: 10
+raster::plotRGB(hillshade)
+```
+
+<img src="man/figures/README-tassie-4.png" width="100%" />
+
+``` r
+
+zlocal <- raster::raster(raster::extent(c(16391003, 16394978, -5301061, -5298768)), crs = raster::projection(ortho))
+zz <- wmts(prefix_shade, zlocal)
+#> zoom: 14
+raster::plotRGB(zz)
+```
+
+<img src="man/figures/README-tassie-5.png" width="100%" />
+
+``` r
+
+TasmapRaster <- "https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/TasmapRaster/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+xx <- wmts(TasmapRaster, zlocal, max_tiles = 16)
+#> zoom: 15
+raster::plotRGB(xx)
+```
+
+<img src="man/figures/README-tassie-6.png" width="100%" />
+
+``` r
+
+
+street <- "https://services.thelist.tas.gov.au/arcgis/rest/services/Raster/TTSA/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+st <- wmts(street, raster::shift(zlocal, 5000, 5000), max_tiles = 36)
+#> zoom: 16
+raster::plotRGB(st)
+```
+
+<img src="man/figures/README-tassie-7.png" width="100%" />
 
 A list of Tasmanian servers is here:
 <https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps>

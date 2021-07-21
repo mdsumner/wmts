@@ -1,6 +1,6 @@
 Package: wmts
 Title: Read imagery from WebMap Tile Servers
-Version: 0.0.1.9001
+Version: 0.0.2
 Authors@R: 
     c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")))
 Description: Read imagery rasters from 'WMTS' ('WebMap Tile Servers') by setting
@@ -10,7 +10,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Imports: 
     slippymath,
     raster,

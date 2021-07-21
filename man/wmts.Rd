@@ -4,8 +4,17 @@
 \alias{wmts}
 \title{OGC Webmap Tile Server (WMTS)}
 \usage{
-wmts(x, loc, buffer = NULL, silent = FALSE, ..., zoom = NULL,
-  max_tiles = 9, bands = 1:3, sds = 1L)
+wmts(
+  x,
+  loc,
+  buffer = NULL,
+  silent = FALSE,
+  ...,
+  zoom = NULL,
+  max_tiles = 9,
+  bands = 1:3,
+  sds = 1L
+)
 }
 \arguments{
 \item{x}{WMTS address, either the raw 'WMTSCapabilities.xml' or an expanded GDAL 'WMTS:<url>[],options]' driver data source}
